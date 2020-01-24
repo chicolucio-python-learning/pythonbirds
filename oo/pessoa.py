@@ -14,3 +14,13 @@ if __name__ == "__main__":
     print(jose.filhos)
     for filho in jose.filhos:
         print(filho.nome)
+
+    jose.sobrenome = 'Bustamante'
+    print(jose.sobrenome)
+
+    print(francisco.__dict__)
+    print(jose.__dict__)
+
+    del jose.filhos
+
+    print(jose.__dict__)
