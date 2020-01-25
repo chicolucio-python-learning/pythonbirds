@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+from fase import Fase, Ponto, EM_ANDAMENTO, VITORIA, DERROTA
+from atores import Obstaculo, Porco, PassaroVermelho, PassaroAmarelo, DESTRUIDO, ATIVO, \
+    Ator, Passaro
+from placa_grafica_tkinter import rodar_fase
 from itertools import chain
 
 import os
@@ -10,21 +14,18 @@ import sys
 project_dir = path.dirname(__file__)
 project_dir = path.join('..')
 sys.path.append(project_dir)
-from placa_grafica_tkinter import rodar_fase
 
 project_dir = os.path.join(os.path.dirname(__file__), '..')
 project_dir = os.path.normpath(project_dir)
 sys.path.append(project_dir)
 
-from atores import Obstaculo, Porco, PassaroVermelho, PassaroAmarelo, DESTRUIDO, ATIVO, \
-    Ator, Passaro
-from fase import Fase, Ponto, EM_ANDAMENTO, VITORIA, DERROTA
 
 class FaseTestes(TestCase):
     def teste_acabou_com_porcos_e_passaros(self):
         fase = Fase()
         porcos = [Porco(1, 1) for i in range(2)]  # criando 2 porcos
-        passaros = [PassaroAmarelo(1, 1) for i in range(2)]  # criando 2 pássaros
+        passaros = [PassaroAmarelo(1, 1)
+                    for i in range(2)]  # criando 2 pássaros
         fase.adicionar_porco(*porcos)
         fase.adicionar_passaro(*passaros)
 
@@ -37,10 +38,12 @@ class FaseTestes(TestCase):
         self.assertEqual(VITORIA, fase.status())
 
         fase.adicionar_obstaculo(Obstaculo())
-        self.assertEqual(VITORIA, fase.status(), 'Obstáculo não interfere no fim do jogo')
+        self.assertEqual(VITORIA, fase.status(),
+                         'Obstáculo não interfere no fim do jogo')
 
         fase.adicionar_porco(Porco())
-        self.assertEqual(DERROTA, fase.status(), 'Com Porco ativo e sem pássaro para lançar, o jogo deveria acabar')
+        self.assertEqual(DERROTA, fase.status(
+        ), 'Com Porco ativo e sem pássaro para lançar, o jogo deveria acabar')
 
         fase.adicionar_passaro(PassaroAmarelo())
         self.assertEqual(EM_ANDAMENTO, fase.status(),
@@ -78,21 +81,25 @@ class FaseTestes(TestCase):
                          'Sem porco ativo, o jogo deveria acabar com vitória')
 
     def teste_lancar_passaro_sem_erro_quando_nao_existe_passaro(self):
-        passaro_vermelho, passaro_amarelo = PassaroVermelho(1, 1), PassaroAmarelo(1, 1)
+        passaro_vermelho, passaro_amarelo = PassaroVermelho(
+            1, 1), PassaroAmarelo(1, 1)
         fase = Fase()
         fase.adicionar_passaro(passaro_vermelho, passaro_amarelo)
         self.assertFalse(passaro_vermelho.foi_lancado())
         self.assertFalse(passaro_amarelo.foi_lancado())
         fase.lancar(90, 1)
         fase.lancar(45, 3)
-        fase.lancar(31, 5)  # testando que lançar passaros depios de todos lançados não causa erro
+        # testando que lançar passaros depios de todos lançados não causa erro
+        fase.lancar(31, 5)
 
         self.assertTrue(passaro_vermelho.foi_lancado())
-        self.assertEqual(math.radians(90), passaro_vermelho._angulo_de_lancamento)
+        self.assertEqual(math.radians(
+            90), passaro_vermelho._angulo_de_lancamento)
         self.assertEqual(1, passaro_vermelho._tempo_de_lancamento)
 
         self.assertTrue(passaro_amarelo.foi_lancado())
-        self.assertEqual(math.radians(45), passaro_amarelo._angulo_de_lancamento)
+        self.assertEqual(math.radians(
+            45), passaro_amarelo._angulo_de_lancamento)
         self.assertEqual(3, passaro_amarelo._tempo_de_lancamento)
 
     def teste_intervalo_de_colisao_padrão(self):
@@ -174,7 +181,8 @@ def criar_fase_exemplo(multiplicador=1):
     passaros = [PassaroVermelho(3 * multiplicador, 3 * multiplicador),
                 PassaroAmarelo(3 * multiplicador, 3 * multiplicador),
                 PassaroAmarelo(3 * multiplicador, 3 * multiplicador)]
-    porcos = [Porco(78 * multiplicador, multiplicador), Porco(70 * multiplicador, multiplicador)]
+    porcos = [Porco(78 * multiplicador, multiplicador),
+              Porco(70 * multiplicador, multiplicador)]
     obstaculos = [Obstaculo(31 * multiplicador, 10 * multiplicador)]
 
     fase_exemplo.adicionar_passaro(*passaros)

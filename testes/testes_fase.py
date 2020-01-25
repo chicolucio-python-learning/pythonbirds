@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+from fase import Fase, Ponto, EM_ANDAMENTO, VITORIA, DERROTA
+from atores import (Obstaculo, Porco, PassaroVermelho, PassaroAmarelo,
+                    DESTRUIDO, ATIVO, DuploLancamentoExcecao)
+from placa_grafica_tkinter import rodar_fase
 import os
 import sys
 from os import path
@@ -8,18 +12,13 @@ from unittest.case import TestCase
 project_dir = path.dirname(__file__)
 project_dir = path.join('..')
 sys.path.append(project_dir)
-from placa_grafica_tkinter import rodar_fase
 
 project_dir = os.path.join(os.path.dirname(__file__), '..')
 project_dir = os.path.normpath(project_dir)
 sys.path.append(project_dir)
 
-from atores import (Obstaculo, Porco, PassaroVermelho, PassaroAmarelo,
-                    DESTRUIDO, ATIVO, DuploLancamentoExcecao)
-from fase import Fase, Ponto, EM_ANDAMENTO, VITORIA, DERROTA
 
-
-class AtorFake:
+class AtorFake:  # Mock
     def __init__(self, x=0, y=0):
         self.y = y
         self.x = x
@@ -113,7 +112,7 @@ class FaseTestes(TestCase):
 
         self.assertEqual(EM_ANDAMENTO, fase.status())
 
-        for ator in porcos + passaros:
+        for ator in porcos + passaros:  # concatenação listas
             ator.status = DESTRUIDO
         self.assertEqual(VITORIA, fase.status())
 
